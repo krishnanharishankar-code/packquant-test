@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Packquant — Packaging Intelligence Portal</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{--navy:#1B3A5C;--nml:#D6E4F0;--teal:#0A5C45;--tll:#E0F2EC;--amb:#7A4500;--aml:#FDF0DC;--rd:#8B0000;--rl:#FDECEA;--gd:#27500A;--gl:#EAF3DE;--bd:#0C447C;--bl:#E6F1FB;--gry:#3A3936;--gm:#6B6A66;--gb:#DDDBD5;--wh:#FFFFFF;--sf:#F7F6F3}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Trebuchet MS',sans-serif;font-size:13px;color:var(--gry);background:var(--sf)}
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+nav{background:var(--navy);padding:0 16px;height:42px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.logo{color:#fff;font-size:15px;font-weight:700}.logo span{color:#7DBDE8;font-weight:400}
+.navl{display:flex;gap:2px}
+.nl{color:#8CAFC8;font-size:11px;padding:4px 9px;border-radius:5px;cursor:pointer}
+.nl:hover,.nl.act{color:#fff;background:rgba(255,255,255,0.12)}
+.navr{display:flex;align-items:center;gap:8px}
+.ava{width:26px;height:26px;border-radius:50%;background:#2E5F8A;display:flex;align-items:center;justify-content:center;color:#7DBDE8;font-size:10px;font-weight:700}
+.nu{font-size:11px;color:#8CAFC8}
+.ldot{width:6px;height:6px;border-radius:50%;background:#4CAF50;display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.scroll{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:10px}
+.scroll::-webkit-scrollbar{width:3px}.scroll::-webkit-scrollbar-thumb{background:var(--gb);border-radius:2px}
+.card{background:var(--wh);border:.5px solid var(--gb);border-radius:12px;overflow:hidden}
+.ch{padding:8px 13px 7px;border-bottom:.5px solid var(--gb);display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.ct{font-size:12px;font-weight:700;color:var(--gry)}.cs{font-size:10px;color:var(--gm);margin-top:1px}
+.bdg{font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.br{background:var(--rl);color:var(--rd)}.ba{background:var(--aml);color:var(--amb)}.bg{background:var(--gl);color:var(--gd)}.bb{background:var(--bl);color:var(--bd)}.bt{background:var(--tll);color:var(--teal)}.bgy{background:var(--sf);color:var(--gm)}
+.nscroll{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;padding:9px 12px 11px}
+.nc{background:var(--sf);border:.5px solid var(--gb);border-radius:9px;padding:9px 10px;cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:all .15s;min-width:0}
+.nc:hover{background:var(--wh);border-color:var(--navy);transform:translateY(-1px)}
+.nct{display:flex;align-items:center;justify-content:space-between}
+.nd{width:7px;height:7px;border-radius:50%}
+.dr{background:#D32F2F}.da{background:#E65100}.dg{background:#388E3C}.db{background:#1565C0}.dp{background:#6A1B9A}
+.na{font-size:10px;color:var(--gm)}.nt{font-size:11.5px;color:var(--gry);line-height:1.42;flex:1}
+.nf{display:flex;align-items:center;justify-content:space-between}.ng{font-size:10px;color:var(--gm)}
+.ar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.tl{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 7px;border-radius:3px;border-left:3px solid}
+.t1{background:var(--sf);color:var(--gm);border-color:var(--gm)}.t2{background:var(--aml);color:var(--amb);border-color:var(--amb)}.t3{background:var(--bl);color:var(--bd);border-color:var(--bd)}
+.ab{padding:9px 12px;display:flex;flex-direction:column;gap:8px}.af{padding:7px 12px;border-top:.5px solid var(--gb)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sb{background:var(--sf);border-radius:5px;padding:7px 9px}
+.sl{font-size:10px;color:var(--gm);margin-bottom:2px}.sv{font-size:17px;font-weight:700;color:var(--gry);line-height:1}.sd{font-size:10px;margin-top:2px}.up{color:#2E7D32}.dn{color:#C62828}
+.mch{position:relative;height:52px}
+.il{display:flex;align-items:center;gap:7px}
+.im{font-size:11px;color:var(--gry);width:80px;flex-shrink:0}
+.itr{flex:1;height:7px;background:var(--sf);border-radius:4px;overflow:hidden;border:.5px solid var(--gb)}
+.if{height:100%;border-radius:4px;transition:width .6s ease}
+.iv{font-size:11px;font-weight:700;min-width:44px;text-align:right}
+.sr{display:flex;align-items:center;gap:6px}.slb{font-size:11px;color:var(--gm);width:70px;flex-shrink:0}
+.seg{height:15px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;min-width:26px}.sc{font-size:10px;color:var(--gm)}
+.cr{display:flex;gap:5px}.cb{flex:1;background:var(--sf);border-radius:5px;padding:6px 8px;text-align:center}.cn{font-size:16px;font-weight:700;line-height:1}.cl{font-size:9px;color:var(--gm);margin-top:2px}
+.pt{height:6px;background:var(--sf);border-radius:3px;overflow:hidden;border:.5px solid var(--gb)}.pf{height:100%;border-radius:3px}
+.ip{background:var(--sf);border-radius:5px;padding:7px 9px}.ipl{font-size:10px;color:var(--gm);margin-bottom:2px}.ipv{font-size:11px;color:var(--gry);line-height:1.38}
+.seclbl{font-size:10px;color:var(--gm);margin-bottom:4px}
+.btn{width:100%;font-size:11px;padding:6px 10px;background:transparent;border:.5px solid var(--gb);border-radius:5px;color:var(--gry);cursor:pointer;font-family:inherit;transition:all .15s}
+.btn:hover{background:var(--sf);border-color:var(--navy);color:var(--navy)}
+.cp{background:var(--wh);border:.5px solid var(--gb);border-radius:12px;display:flex;flex-direction:column;flex-shrink:0}
+.ctabs{display:flex;overflow-x:auto;border-bottom:.5px solid var(--gb);background:var(--sf);border-radius:12px 12px 0 0;scrollbar-width:none}
+.ctabs::-webkit-scrollbar{display:none}
+.ctab{padding:7px 12px;font-size:11px;color:var(--gm);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;flex-shrink:0}
+.ctab.act{color:var(--navy);border-bottom-color:var(--navy);background:var(--wh);font-weight:700}
+.chips{display:flex;gap:5px;flex-wrap:wrap;padding:7px 11px;border-bottom:.5px solid var(--gb)}
+.chip{font-size:11px;padding:3px 9px;border-radius:20px;background:var(--sf);border:.5px solid var(--gb);color:var(--gm);cursor:pointer;white-space:nowrap}
+.chip:hover{background:var(--nml);border-color:var(--navy);color:var(--navy)}
+.msgs{overflow-y:auto;padding:9px 12px;display:flex;flex-direction:column;gap:8px;max-height:220px}
+.msgs::-webkit-scrollbar{width:3px}.msgs::-webkit-scrollbar-thumb{background:var(--gb);border-radius:2px}
+.msg{display:flex;gap:7px;align-items:flex-start}.msg.user{flex-direction:row-reverse}
+.mb{max-width:74%;padding:7px 10px;border-radius:9px;font-size:11.5px;line-height:1.48}
+.msg.user .mb{background:var(--navy);color:#fff;border-radius:9px 3px 9px 9px}
+.msg.ai .mb{background:var(--sf);border:.5px solid var(--gb);color:var(--gry);border-radius:3px 9px 9px 9px}
+.mav{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px}
+.mav.ai{background:var(--tll);color:var(--teal)}.mav.user{background:var(--nml);color:var(--navy)}
+.typ{display:flex;gap:3px;align-items:center;padding:3px 0}
+.typ span{width:5px;height:5px;border-radius:50%;background:var(--gm);animation:bounce .9s infinite}
+.typ span:nth-child(2){animation-delay:.15s}.typ span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+.cir{display:flex;gap:7px;align-items:center;padding:8px 11px}
+.ci{flex:1;background:var(--sf);border:.5px solid var(--gb);border-radius:9px;padding:7px 11px;font-size:12px;color:var(--gry);font-family:inherit;resize:none;outline:none}
+.ci:focus{border-color:var(--navy);background:var(--wh)}
+.sb2{background:var(--navy);color:#fff;border:none;border-radius:9px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600}
+.sb2:hover{background:#2E5F8A}.sb2:disabled{background:var(--sf);color:var(--gm);cursor:not-allowed}
+</style>
+</head>
+<body>
+<div class="app">
+<nav>
+  <div class="logo">Pack<span>quant</span></div>
+  <div class="navl">
+    <div class="nl act">Portal</div>
+    <div class="nl">Intelligence</div>
+    <div class="nl">Compliance</div>
+    <div class="nl">Cost tools</div>
+    <div class="nl">My portfolio</div>
+  </div>
+  <div class="navr">
+    <span style="font-size:10px;color:#8CAFC8"><span class="ldot"></span>Live</span>
+    <div class="ava">RS</div>
+    <div class="nu">Rajan S · Unilever India</div>
+  </div>
+</nav>
+
+<div class="scroll">
+
+<div class="card">
+  <div class="ch">
+    <div><div class="ct">Packaging intelligence feed</div><div class="cs">Regulatory, market &amp; innovation · 14 stories · updated 2 hrs ago</div></div>
+    <div style="display:flex;gap:5px"><span class="bdg br">2 urgent</span></div>
+  </div>
+  <div class="nscroll">
+    <div class="nc" onclick="ask('Explain EU PPWR final requirements for recycled content and what this means for our rigid plastic portfolio')">
+      <div class="nct"><div class="nd dr"></div><span class="na">Today</span></div>
+      <div class="nt">EU PPWR final text: rigid plastic must contain 30% recycled content by 2030, rising to 50% by 2040. Single-use formats banned from 2030.</div>
+      <div class="nf"><span class="bdg br">Regulatory</span><span class="ng">EU</span></div>
+    </div>
+    <div class="nc" onclick="ask('How does the UK Plastic Packaging Tax rise to 217.85 per tonne affect our UK portfolio cost base?')">
+      <div class="nct"><div class="nd da"></div><span class="na">Today</span></div>
+      <div class="nt">UK Plastic Packaging Tax rises to 217.85 per tonne from 1 April 2026. Less than 30% recycled content is liable. HMRC confirms no grace period.</div>
+      <div class="nf"><span class="bdg ba">Cost impact</span><span class="ng">UK</span></div>
+    </div>
+    <div class="nc" onclick="ask('What is driving HDPE price increases in Asia and which of our specifications are most exposed?')">
+      <div class="nct"><div class="nd da"></div><span class="na">Yesterday</span></div>
+      <div class="nt">HDPE spot prices hit $1,142 per tonne in Asia, up 7.2% in 30 days. Sinopec and SABIC report reduced allocations due to naphtha feedstock shortages.</div>
+      <div class="nf"><span class="bdg ba">Market</span><span class="ng">APAC</span></div>
+    </div>
+    <div class="nc" onclick="ask('Is the Mondi-Siegwerk bio-based barrier coating suitable for our dry food flexible packaging?')">
+      <div class="nct"><div class="nd dg"></div><span class="na">Yesterday</span></div>
+      <div class="nt">Mondi and Siegwerk commercialise bio-barrier coating matching aluminium foil performance. EU 10/2011 food contact approved. Available at scale from Q3 2026.</div>
+      <div class="nf"><span class="bdg bg">Innovation</span><span class="ng">Global</span></div>
+    </div>
+    <div class="nc" onclick="ask('What does the Ellen MacArthur 2025 report say about flexible laminate packaging?')">
+      <div class="nct"><div class="nd dg"></div><span class="na">2 days ago</span></div>
+      <div class="nt">Ellen MacArthur Foundation 2025: 67% of signatories on track for 100% recyclable packaging. Flexible laminates remain the most problematic format category.</div>
+      <div class="nf"><span class="bdg bg">Sustainability</span><span class="ng">Global</span></div>
+    </div>
+    <div class="nc" onclick="ask('What are the India EPR obligations for our packaging portfolio and penalties for non-compliance?')">
+      <div class="nct"><div class="nd db"></div><span class="na">2 days ago</span></div>
+      <div class="nt">India MoEFCC extends EPR registration deadline to 30 June 2026. FY2025-26 collection targets unchanged at 50%. Penalties of Rs 1 lakh per day after deadline.</div>
+      <div class="nf"><span class="bdg bb">Regulatory</span><span class="ng">India</span></div>
+    </div>
+    <div class="nc" onclick="ask('What is the outlook for European corrugated board prices through H2 2026?')">
+      <div class="nct"><div class="nd dg"></div><span class="na">3 days ago</span></div>
+      <div class="nt">European corrugated board softens to 642 EUR per tonne as OCC fibre costs fall 12% year-on-year. Stora Enso and DS Smith signal stable Q2 pricing.</div>
+      <div class="nf"><span class="bdg bg">Market</span><span class="ng">Europe</span></div>
+    </div>
+    <div class="nc" onclick="ask('What is the technical approach behind the Nestle KitKat paper-based flexible pack?')">
+      <div class="nct"><div class="nd dg"></div><span class="na">3 days ago</span></div>
+      <div class="nt">Nestle pilots paper-based flexible pack for KitKat in 6 EU markets. 12-month shelf life achieved. Plastic content reduced by 89%. Roll-out to 15 markets planned H1 2027.</div>
+      <div class="nf"><span class="bdg bg">Innovation</span><span class="ng">EU</span></div>
+    </div>
+    <div class="nc" onclick="ask('What does the EU FCM reform mean for our food contact packaging PFAS migration limits?')">
+      <div class="nct"><div class="nd dr"></div><span class="na">4 days ago</span></div>
+      <div class="nt">EU FCM reform: single framework regulation proposed. PFAS migration limits tightened to 0.01 mg per kg food across all packaging materials.</div>
+      <div class="nf"><span class="bdg br">Regulatory</span><span class="ng">EU</span></div>
+    </div>
+    <div class="nc" onclick="ask('What are the Carrefour, Lidl and Aldi 2027 packaging scorecard requirements?')">
+      <div class="nct"><div class="nd da"></div><span class="na">4 days ago</span></div>
+      <div class="nt">Carrefour, Lidl and Aldi announce mandatory packaging scorecards for all suppliers from 2027. Minimum 70% recyclability score required. Suppliers below threshold face delisting.</div>
+      <div class="nf"><span class="bdg ba">Sustainability</span><span class="ng">EU retail</span></div>
+    </div>
+    <div class="nc" onclick="ask('What is the business case for switching our PET bottle range to 100% rPET?')">
+      <div class="nct"><div class="nd da"></div><span class="na">5 days ago</span></div>
+      <div class="nt">PET resin reaches $980 per tonne as rPET demand surges. Virgin PET and rPET now at near price parity for the first time globally.</div>
+      <div class="nf"><span class="bdg ba">Market</span><span class="ng">Global</span></div>
+    </div>
+    <div class="nc" onclick="ask('What packaging changes are needed for EU FMD DataMatrix serialisation for OTC medicines by January 2027?')">
+      <div class="nct"><div class="nd dp"></div><span class="na">5 days ago</span></div>
+      <div class="nt">EU FMD extended: OTC medicines above 5 EUR must carry DataMatrix serialisation and tamper-evident seals from January 2027. 2.3 billion additional packs affected.</div>
+      <div class="nf"><span class="bdg bt">Pharma</span><span class="ng">EU</span></div>
+    </div>
+    <div class="nc" onclick="ask('Tell me about the ITC monomaterial PE pouch for detergent refills and its recyclability')">
+      <div class="nct"><div class="nd dg"></div><span class="na">6 days ago</span></div>
+      <div class="nt">ITC India launches monomaterial PE pouch for detergent refills. 400% weight reduction vs rigid HDPE bottles. Passes Recyclass assessment. Piloted by HUL in Bangalore and Mumbai.</div>
+      <div class="nf"><span class="bdg bg">Innovation</span><span class="ng">India</span></div>
+    </div>
+    <div class="nc" onclick="ask('What alternative barrier packaging substrates should we evaluate as India aluminium foil prices rise?')">
+      <div class="nct"><div class="nd da"></div><span class="na">6 days ago</span></div>
+      <div class="nt">India aluminium foil prices rise 4.3% to Rs 285 per kg as LME rallies and Hindalco capacity remains constrained. Pharma blister and confectionery formats most impacted.</div>
+      <div class="nf"><span class="bdg ba">Market</span><span class="ng">India</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="ar">
+  <div class="card">
+    <div class="ch"><div><div class="ct">Market price tracker</div><div class="cs">Public · RISI, ICIS, LME</div></div><span class="tl t1">Tier 1 — public</span></div>
+    <div class="ab">
+      <div class="sg">
+        <div class="sb"><div class="sl">HDPE (Asia)</div><div class="sv">$1,142<span style="font-size:11px;font-weight:400">/t</span></div><div class="sd dn">&#9650; 7.2% / 30d</div></div>
+        <div class="sb"><div class="sl">Corrugated (EU)</div><div class="sv">&#8364;642<span style="font-size:11px;font-weight:400">/t</span></div><div class="sd up">&#9660; 2.1% / 30d</div></div>
+        <div class="sb"><div class="sl">PET resin</div><div class="sv">$980<span style="font-size:11px;font-weight:400">/t</span></div><div class="sd dn">&#9650; 3.8% / 30d</div></div>
+        <div class="sb"><div class="sl">Aluminium (LME)</div><div class="sv">$2,418<span style="font-size:11px;font-weight:400">/t</span></div><div class="sd up">&#9660; 0.9% / 30d</div></div>
+      </div>
+      <div><div class="seclbl">HDPE 12-month trend (USD/t)</div><div class="mch"><canvas id="c1"></canvas></div></div>
+      <div><div class="seclbl">Corrugated 12-month trend (EUR/t)</div><div class="mch"><canvas id="c2"></canvas></div></div>
+    </div>
+    <div class="af"><button class="btn" onclick="ask('What is driving current HDPE and PET price movements and what is the 6-month outlook?')">Price outlook and drivers</button></div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div><div class="ct">Portfolio cost impact</div><div class="cs">Market prices x your active specs</div></div><span class="tl t2">Tier 2 — overlay</span></div>
+    <div class="ab">
+      <div class="ip" style="background:var(--rl);display:flex;justify-content:space-between;align-items:center">
+        <div><div class="ipl">Est. additional cost this month</div><div style="font-size:19px;font-weight:700;color:#C62828">+&#8377;18.4 L</div></div>
+        <div style="text-align:right"><div class="ipl">vs prior month</div><div style="font-size:13px;font-weight:700;color:#C62828">+4.2%</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="il"><div class="im">HDPE rigid</div><div class="itr"><div class="if" id="b1" style="width:0%;background:#D32F2F"></div></div><div class="iv" style="color:#D32F2F">+&#8377;8.1L</div></div>
+        <div class="il"><div class="im">PET bottles</div><div class="itr"><div class="if" id="b2" style="width:0%;background:#E65100"></div></div><div class="iv" style="color:#E65100">+&#8377;4.7L</div></div>
+        <div class="il"><div class="im">Flex laminates</div><div class="itr"><div class="if" id="b3" style="width:0%;background:#E65100"></div></div><div class="iv" style="color:#E65100">+&#8377;3.0L</div></div>
+        <div class="il"><div class="im">Corrugated</div><div class="itr"><div class="if" id="b4" style="width:0%;background:#388E3C"></div></div><div class="iv" style="color:#388E3C">-&#8377;1.8L</div></div>
+      </div>
+      <div class="ip"><div class="ipl">Top exposure</div><div class="ipv">HDPE rigid containers · 218 SKUs · 3 substitution options available</div></div>
+      <div><div class="seclbl">Cost impact trend — 6 months</div><div class="mch"><canvas id="c3"></canvas></div></div>
+    </div>
+    <div class="af"><button class="btn" onclick="ask('Which specifications are most exposed to HDPE price increases and what are the substitution options with cost implications?')">Analyse exposure and substitutions</button></div>
+  </div>
+
+  <div class="card">
+    <div class="ch"><div><div class="ct">Portfolio analytics</div><div class="cs">Internal data warehouse · daily refresh</div></div><span class="tl t3">Tier 3 — internal BI</span></div>
+    <div class="ab">
+      <div>
+        <div class="seclbl">Active specs by material</div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="sr"><div class="slb">Rigid plastic</div><div class="seg" style="width:70px;background:#B5D4F4;color:#0C447C">44%</div><div class="sc">218 SKUs</div></div>
+          <div class="sr"><div class="slb">Flexible</div><div class="seg" style="width:45px;background:#9FE1CB;color:#085041">28%</div><div class="sc">138 SKUs</div></div>
+          <div class="sr"><div class="slb">Corrugated</div><div class="seg" style="width:29px;background:#FAC775;color:#633806">18%</div><div class="sc">89 SKUs</div></div>
+          <div class="sr"><div class="slb">Glass/other</div><div class="seg" style="width:16px;background:#D3D1C7;color:#444441">10%</div><div class="sc">47 SKUs</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="seclbl">Compliance status · 492 total specs</div>
+        <div class="cr">
+          <div class="cb"><div class="cn" style="color:#2E7D32">421</div><div class="cl">Compliant</div></div>
+          <div class="cb"><div class="cn" style="color:#E65100">58</div><div class="cl">Review needed</div></div>
+          <div class="cb" style="border:1px solid #F09595"><div class="cn" style="color:#C62828">13</div><div class="cl">Action required</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="seclbl" style="display:flex;justify-content:space-between"><span>Sustainability score vs 80% target</span><span style="font-weight:700;color:#2E7D32">67%</span></div>
+        <div class="pt"><div class="pf" style="width:67%;background:#388E3C"></div></div>
+      </div>
+      <div><div class="seclbl">Spend by category (Rs Cr YTD)</div><div class="mch"><canvas id="c4"></canvas></div></div>
+    </div>
+    <div class="af"><button class="btn" onclick="ask('Show me the 13 specifications flagged as action required and what changes are needed for each')">Drill into portfolio</button></div>
+  </div>
+</div>
+</div>
+
+<div class="cp" style="margin:0 10px 10px">
+  <div class="ctabs">
+    <div class="ctab act" data-tab="ask">Ask intelligence</div>
+    <div class="ctab" data-tab="design">Design advisor</div>
+    <div class="ctab" data-tab="comp">Compliance check</div>
+    <div class="ctab" data-tab="cost">Cost optimiser</div>
+    <div class="ctab" data-tab="sup">Supplier finder</div>
+    <div class="ctab" data-tab="spec">Spec analyser</div>
+  </div>
+  <div class="chips" id="chips-ask">
+    <div class="chip" onclick="ask('What sustainable alternatives exist for our HDPE rigid containers that meet EU recyclability requirements?')">Sustainable HDPE alternatives</div>
+    <div class="chip" onclick="ask('What does EU PPWR mean for our flexible packaging portfolio?')">EU PPWR impact on flexibles</div>
+    <div class="chip" onclick="ask('Which packaging materials in our portfolio have the highest cost reduction potential?')">Cost reduction opportunities</div>
+    <div class="chip" onclick="ask('What are food contact compliance requirements for our PET bottles in India and EU?')">Food contact: PET compliance</div>
+  </div>
+  <div class="chips" id="chips-design" style="display:none">
+    <div class="chip" onclick="ask('I need a new primary pack for a chilled ready meal targeting EU retail — what formats should I consider?')">New format: chilled ready meal</div>
+    <div class="chip" onclick="ask('What are the latest innovations in sustainable flexible packaging for personal care?')">Sustainable flex innovations</div>
+    <div class="chip" onclick="ask('What structural design options exist for a premium cosmetics carton that is recyclable?')">Premium carton design</div>
+  </div>
+  <div class="chips" id="chips-comp" style="display:none">
+    <div class="chip" onclick="ask('Check if a PET/PE laminate complies with EU 10/2011 for ambient dry food contact')">EU 10/2011: PET/PE laminate</div>
+    <div class="chip" onclick="ask('What EPR registration obligations apply to our packaging in Germany, France and UK for 2026?')">EPR obligations: EU and UK</div>
+    <div class="chip" onclick="ask('What labelling requirements apply to our packaging range in the Indian market?')">India labelling requirements</div>
+  </div>
+  <div class="chips" id="chips-cost" style="display:none">
+    <div class="chip" onclick="ask('What is the benchmark cost for 500ml HDPE bottles at 2 million units per year in Asia-Pacific?')">Benchmark: HDPE 500ml APAC</div>
+    <div class="chip" onclick="ask('Model the cost impact of switching our corrugated secondary packaging to 80% recycled content board')">Cost model: recycled board</div>
+    <div class="chip" onclick="ask('Which of our current packaging specifications are above market benchmark pricing?')">Over-benchmark specs</div>
+  </div>
+  <div class="chips" id="chips-sup" style="display:none">
+    <div class="chip" onclick="ask('Which qualified suppliers can we approach for corrugated board in India at 500k units per month?')">Corrugated suppliers India</div>
+    <div class="chip" onclick="ask('Find flexible packaging converters in Southeast Asia for food-grade laminates at 2M units per year')">Flex converters SE Asia</div>
+    <div class="chip" onclick="ask('What is the supplier landscape for FSC-certified corrugated board in Europe?')">FSC corrugated: EU suppliers</div>
+  </div>
+  <div class="chips" id="chips-spec" style="display:none">
+    <div class="chip" onclick="ask('Analyse my packaging specification and identify ambiguities and improvement opportunities')">Analyse uploaded spec</div>
+    <div class="chip" onclick="ask('Compare our HDPE bottle specification against industry benchmarks for weight and wall thickness')">Benchmark my spec</div>
+    <div class="chip" onclick="ask('What changes are needed to make this specification comply with EU PPWR recyclability requirements?')">Make spec PPWR-compliant</div>
+  </div>
+  <div class="msgs" id="msgs">
+    <div class="msg ai"><div class="mav ai">PQ</div><div class="mb">Hello Rajan — I am your Packquant packaging intelligence assistant. I can help with compliance checks, cost benchmarking, material selection, supplier sourcing, and design guidance. What would you like to explore today?</div></div>
+  </div>
+  <div class="cir">
+    <textarea class="ci" id="ci" rows="1" placeholder="Ask anything about packaging design, compliance, cost, materials, suppliers or regulations..."></textarea>
+    <button class="sb2" id="sendbtn" onclick="send()">Send</button>
+  </div>
+</div>
+
+</div>
+<script>
+var SYS="You are Packquant packaging intelligence assistant, expert in consumer goods and pharmaceutical packaging. User is Rajan S, packaging manager at Unilever India. Portfolio: 492 active specs, rigid plastic 44% (218 SKUs), flexible 28% (138 SKUs), corrugated 18% (89 SKUs), glass/other 10% (47 SKUs). 13 specs require compliance action. Be concise, specific and actionable.";
+var hist=[];
+function addMsg(txt,role){var c=document.getElementById('msgs');var d=document.createElement('div');d.className='msg '+role;d.innerHTML='<div class="mav '+role+'">'+(role==='ai'?'PQ':'RS')+'</div><div class="mb">'+txt.replace(/\n/g,'<br>')+'</div>';c.appendChild(d);c.scrollTop=c.scrollHeight;}
+function addTyping(){var c=document.getElementById('msgs');var d=document.createElement('div');d.className='msg ai';d.id='typ';d.innerHTML='<div class="mav ai">PQ</div><div class="mb"><div class="typ"><span></span><span></span><span></span></div></div>';c.appendChild(d);c.scrollTop=c.scrollHeight;}
+function removeTyping(){var el=document.getElementById('typ');if(el)el.remove();}
+async function callAPI(txt){hist.push({role:'user',content:txt});var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:SYS,messages:hist})});if(!res.ok)throw new Error('API error');var data=await res.json();var reply=data.content[0].text;hist.push({role:'assistant',content:reply});return reply;}
+async function send(){var ci=document.getElementById('ci');var btn=document.getElementById('sendbtn');var txt=ci.value.trim();if(!txt)return;ci.value='';ci.style.height='auto';addMsg(txt,'user');btn.disabled=true;addTyping();try{var reply=await callAPI(txt);removeTyping();addMsg(reply,'ai');}catch(e){removeTyping();addMsg('Sorry, could not reach the intelligence server. Please try again.','ai');}btn.disabled=false;}
+function ask(q){document.getElementById('ci').value=q;send();}
+document.getElementById('ci').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+document.getElementById('ci').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,72)+'px';});
+document.querySelector('.ctabs').addEventListener('click',function(e){var tab=e.target.closest('.ctab');if(!tab)return;var id=tab.dataset.tab;document.querySelectorAll('.ctab').forEach(function(t){t.classList.remove('act')});tab.classList.add('act');document.querySelectorAll('.chips').forEach(function(c){c.style.display='none'});var ch=document.getElementById('chips-'+id);if(ch)ch.style.display='flex';});
+function line(id,labels,data,color,fill){new Chart(document.getElementById(id).getContext('2d'),{type:'line',data:{labels:labels,datasets:[{data:data,borderColor:color,backgroundColor:fill,borderWidth:1.5,pointRadius:0,tension:.35,fill:true}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1B3A5C',titleFont:{size:10},bodyFont:{size:10},padding:5,cornerRadius:4}},scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#9E9D9A',maxTicksLimit:6},border:{display:false}},y:{grid:{color:'#F0EFEC'},ticks:{font:{size:9},color:'#9E9D9A',maxTicksLimit:4},border:{display:false}}}}});}
+function bar(id,labels,data,colors){new Chart(document.getElementById(id).getContext('2d'),{type:'bar',data:{labels:labels,datasets:[{data:data,backgroundColor:colors,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1B3A5C',titleFont:{size:10},bodyFont:{size:10},padding:5,cornerRadius:4}},scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#9E9D9A'},border:{display:false}},y:{grid:{color:'#F0EFEC'},ticks:{font:{size:9},color:'#9E9D9A',maxTicksLimit:4},border:{display:false}}}}});}
+var mo=['May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr'];
+line('c1',mo,[68,72,65,70,75,82,79,85,88,92,98,106],'#1565C0','rgba(21,101,192,0.08)');
+line('c2',mo,[84,86,90,88,85,82,80,78,76,74,73,72],'#388E3C','rgba(56,142,60,0.08)');
+line('c3',['Nov','Dec','Jan','Feb','Mar','Apr'],[8.2,11.4,9.8,13.1,15.6,18.4],'#C62828','rgba(198,40,40,0.07)');
+bar('c4',['Rigid','Flex','Corr','Glass','Other'],[42,28,18,8,4],['#1565C0','#0A5C45','#E65100','#6A1B9A','#888780']);
+setTimeout(function(){document.getElementById('b1').style.width='82%';document.getElementById('b2').style.width='48%';document.getElementById('b3').style.width='31%';document.getElementById('b4').style.width='18%';},300);
+</script>
+</body>
+</html>
